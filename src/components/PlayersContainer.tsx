@@ -1,38 +1,39 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { generatePlayers } from "../features/randomSlice";
+import { useState } from "react";
 
 function PlayersContainer() {
-  const {leftPartPLayersArray, rightPartPlayersArray, players } = useSelector((store: RootState) => store.players);
-  const dispatch: AppDispatch = useDispatch();
+  const { players, newArray } = useSelector((store: RootState) => store.players);
+  const dispatch: AppDispatch = useDispatch();  
+
+//   const [isClicked, setIsClicked] = useState(false);
+//   const hanndleGeneratePlayers = () => {
+//       setIsClicked(false);
+//       dispatch(generatePlayers())
+//       setIsClicked(true);
+// };
 
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       <h1>Players Container</h1>
-      {players.map((player) => (
-        <div key={player.id}>
-          <p>{player.id}</p>
-          <p>{player.name}</p>
-        </div>
-      ))}
-      <div style={{display: "flex"}}>
-      {leftPartPLayersArray.map((leftPartPLayerArray) => (
-        <div key={leftPartPLayerArray.id}>
-          {/* <p>{leftPartPLayerArray.id}</p> */}
-          <p>{leftPartPLayerArray.name}</p>
-        </div>
-      ))}
-      {
-        rightPartPlayersArray.map((rightPartPlayerArray) => (
-            <div key={rightPartPlayerArray.id}>
-                {/* <p>{rightPartPlayerArray.id}</p> */}
-                <p>{rightPartPlayerArray.name}</p>
-            </div>
-        ))
-      }
+      <div style={{ display: "flex", flexFlow: "column" }}>
+        {players.map((player) => (
+          <div key={player.id}>
+            <p>{player.name}</p>
+          </div>
+        ))}
       </div>
-
-      <button onClick={() => dispatch(generatePlayers()) }>Click</button>
+      <div style={{ display: "flex", flexFlow: "column" }}>
+        {newArray.map((item) => (
+          <div key={item.id}>
+            <p>{item.name}</p>
+          </div>
+        ))}
+      </div>
+      <div>
+        <button onClick={() => dispatch(generatePlayers())}>Gen</button>
+      </div>
     </div>
   );
 }
