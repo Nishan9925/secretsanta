@@ -1,114 +1,62 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import { WritableDraft } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 interface Player {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface Players {
   players: Player[];
-  newArray: Player[];
+  newArray: { [key: string]: Player };
+  // newArray: Player[];
 }
 
 const initialState: Players = {
   players: [
-    { id: 100, name: "AAAA" },
-    { id: 101, name: "Bbbb" },
-    { id: 102, name: "Cccc" },
-    { id: 103, name: "Dddd" },
-    { id: 104, name: "Eee" },
-    // { id: 105, name: "Ffff" },
-    // { id: 106, name: "Gggg" },
-    // { id: 107, name: "Hhhhh" },
-    // { id: 108, name: "Iiiiis" },
+    { id: "100", name: "AAAA" },
+    { id: "101", name: "Bbbb" },
+    { id: "102", name: "Cccc" },
+    { id: "103", name: "Dddd" },
+    { id: "104", name: "Eeee" },
+    { id: "105", name: "Ffff" },
+    { id: "106", name: "Gggg" },
   ],
-  newArray: [],
+  newArray: {},
 };
 
 const playersReducer = createSlice({
-  name: "players",
+  name: "random",
   initialState,
   reducers: {
     generatePlayers: (state) => {
-      const copiedPlayers = [...state.players];
-
-      state.newArray = [];
-
+      // const copiedPlayers = JSON.parse(JSON.stringify(state.players));
+      // const newArray:any[]= [];
+      const assignedPlayers: { [key: string]: Player } = {};
       state.players.forEach((player) => {
         let pickedPlayerIndex;
         let pickedPlayer;
         do {
-          pickedPlayerIndex = Math.floor(Math.random() * copiedPlayers.length);
-          pickedPlayer = copiedPlayers[pickedPlayerIndex];
-        } while (pickedPlayer === player);
-        state.newArray.push(pickedPlayer);
-        copiedPlayers.splice(pickedPlayerIndex, 1);
+          pickedPlayerIndex = Math.floor(Math.random() * state.players.length);
+          pickedPlayer = state.players[pickedPlayerIndex];
+          console.log(1);
+          // console.log(assignedPlayers);
+        } while (pickedPlayer.id === player.id);
+        // state.players.splice(pickedPlayerIndex, 1);
+        assignedPlayers[player.id] = pickedPlayer.name;
+        console.log(2);
+        // console.log(assignedPlayers);
+        // assignedPlayers.name = "name";
+        // newArray.push(pickedPlayer);
+        state.players.splice(pickedPlayerIndex, 1);
       });
+      // console.log(newArray,'newArray');
+      console.log("Assigned Players:", assignedPlayers);
+    console.log("Remaining Players:", state.players);
+      state.newArray = assignedPlayers;
+      // return assignedPlayers;
     },
   },
 });
 
 export const { generatePlayers } = playersReducer.actions;
 export default playersReducer.reducer;
-
-// {
-//   ...state,
-//   newArray: assignments,
-// };
-
-//     const copiedPlayers = [...state.players];
-//     // if(copiedPlayers.length > 0) {
-//     // copiedPlayers.forEach((player) => {
-//     while (copiedPlayers.length > 0) {
-//       let pickedPlayerIndex = Math.floor(Math.random()) * copiedPlayers.length;
-//       if (copiedPlayers.length > 0 && player === copiedPlayers[pickedPlayerIndex]) {
-//         const playerGet = copiedPlayers.splice(pickedPlayerIndex, 1);
-//         state.newArray.push(playerGet);
-//       }
-//     }
-//   }
-//     // }
-// )
-
-// while (copiedPlayers.length > 0) {
-//   const pickedPlayerIndex = Math.floor(Math.random() * copiedPlayers.length);
-//   if(copiedPlayers[pickedPlayerIndex] === player){
-//     const pickedPlayer = copiedPlayers.splice(pickedPlayerIndex, 1)[0];
-//     state.newArray.push(pickedPlayer);
-//   }
-//   // const pickedPlayer = copiedPlayers[pickedPlayerIndex];
-//   // state.newArray.push(pickedPlayer);
-// }
-// // return state.newArray;
-
-// }
-
-// const gen = () => {
-//   if (state.players.length !== 0) {
-//     state.players.forEach(() => {
-//       const player = Math.floor(Math.random() * state.players.length);
-//       const takenPlayer = state.players[player];
-//       const alreadyExists = state.newArray.some(
-//         (existingPlayer) => existingPlayer.id === takenPlayer.id
-//       );
-//       const playersCheckIndex = state.players.findIndex(
-//         (ifSamePlayer) => ifSamePlayer.id === takenPlayer.id
-//       );
-//       const newArrayCheckIndex = state.newArray.findIndex(
-//         (ifSamePlayer) => ifSamePlayer.id === takenPlayer.id
-//       );
-//       if (
-//         !alreadyExists &&
-//         newArrayCheckIndex === -1 &&
-//         state.newArray.length !== playersCheckIndex
-//       ) {
-//         state.newArray.push(takenPlayer);
-//       }
-//       if (state.newArray.length < state.players.length) {
-//         gen();
-//       }
-//     });
-//   }
-// };
-// gen();
