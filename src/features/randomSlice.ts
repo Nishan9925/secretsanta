@@ -8,7 +8,6 @@ interface Player {
 interface Players {
   players: Player[];
   newArray: { [key: string]: Player };
-  // newArray: Player[];
 }
 
 const initialState: Players = {
@@ -29,31 +28,25 @@ const playersReducer = createSlice({
   initialState,
   reducers: {
     generatePlayers: (state) => {
-      // const copiedPlayers = JSON.parse(JSON.stringify(state.players));
-      // const newArray:any[]= [];
-      const assignedPlayers: { [key: string]: Player } = {};
-      state.players.forEach((player) => {
-        let pickedPlayerIndex;
-        let pickedPlayer;
-        do {
-          pickedPlayerIndex = Math.floor(Math.random() * state.players.length);
-          pickedPlayer = state.players[pickedPlayerIndex];
-          console.log(1);
-          // console.log(assignedPlayers);
-        } while (pickedPlayer.id === player.id);
-        // state.players.splice(pickedPlayerIndex, 1);
-        assignedPlayers[player.id] = pickedPlayer.name;
-        console.log(2);
-        // console.log(assignedPlayers);
-        // assignedPlayers.name = "name";
-        // newArray.push(pickedPlayer);
-        state.players.splice(pickedPlayerIndex, 1);
+      const shuffleArray = (array: Player[]) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      };
+      let availablePlayers = [...state.players];
+      let assignedPlayers: { [key: string]: string } = {};
+      let valid = false;
+      while (!valid) {
+        availablePlayers = shuffleArray([...state.players]);
+        valid = state.players.every((player, index) => player.id !== availablePlayers[index].id);
+      }
+      state.players.forEach((player, index) => {
+        assignedPlayers[player.id] = availablePlayers[index].name;
       });
-      // console.log(newArray,'newArray');
-      console.log("Assigned Players:", assignedPlayers);
-    console.log("Remaining Players:", state.players);
+
       state.newArray = assignedPlayers;
-      // return assignedPlayers;
     },
   },
 });

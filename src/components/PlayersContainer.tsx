@@ -1,50 +1,46 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, store } from "../store";
 import { generatePlayers } from "../features/randomSlice";
-
+import { Table } from "antd";
 function PlayersContainer() {
   const { players, newArray } = useSelector((store: RootState) => store.players);
   const dispatch: AppDispatch = useDispatch();
 
-    // const columns = {
-    //     title: "Santa"
-    //     dataIndex: "santa"
-    //     key
-    // }
-// const aaa = useSelector(store => store);
-// console.log(aaa, 'aaa');
-const handlePlayers = () => {
-    dispatch(generatePlayers());
-}
+  const columnSanta = [
+    {
+      title: "Santa",
+      dataIndex: "santa",
+      key: "santa",
+    }
+  ]
+
+  const staticNames = players.map((player) => ({
+    ...player,
+    key: player.id,
+  }));
 
   return (
-    <div style={{ display: "flex" }}>
-      <h1>Players Container</h1>
-      <div style={{ display: "flex", flexFlow: "column" }}>
+    <div style={{ display: "flex",  }}>
+      <h1>Players</h1>
+      {/* <div style={{ display: "flex", flexFlow: "column" }}>
         {players.map((player) => (
           <div key={player.id}>
             <p>{player.name}</p>
           </div>
         ))}
+      </div> */}
+      <div>
+        <Table columns={columnSanta} dataSource={staticNames}/>
       </div>
-      {/* <div style={{ display: "flex", flexFlow: "column" }}>
-        {newArray.map((item) => (
-          <div key={item.id}>
-            <p>{item.name}</p>
+      <div style={{ display: "flex", flexFlow: "column", gap: ".01rem" }}>
+        {Object.entries(newArray).map(([playerId, playerName]) => (
+          <div key={playerId}>
+            <p>{playerName}</p>
           </div>
         ))}
-      </div> */}
-       <ul>
-        {Object.entries(newArray).map(([playerId, playerName]) => (
-          <li key={playerId}>
-            {playerId}: {playerName}
-          </li>
-        ))}
-      </ul>
+      </div>
       <div>
-        {/* <button onClick={() => dispatch(generatePlayers())}>Gen</button> */}
-        <button onClick={handlePlayers}>Gen</button>
-        
+        <button onClick={() => dispatch(generatePlayers())}>Gen</button>
       </div>
     </div>
   );
